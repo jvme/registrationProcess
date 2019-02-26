@@ -21,6 +21,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.sardinasoft.security.repository.UserRepository;
+import com.sardinasoft.security.security.google2fa.CustomAuthenticationProvider;
+import com.sardinasoft.security.security.google2fa.CustomWebAuthenticationDetailsSource;
 
 @Configuration
 @ComponentScan(basePackages = { "com.sardinasoft.security" })
@@ -33,14 +35,15 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
 
+    
     @Autowired
     private LogoutSuccessHandler myLogoutSuccessHandler;
 
     @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
 
-   // @Autowired
-   // private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
+    @Autowired
+    private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
 
     @Autowired
     private UserRepository userRepository;
@@ -86,7 +89,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error=true")
                 .successHandler(myAuthenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
-              //  .authenticationDetailsSource(authenticationDetailsSource)
+                .authenticationDetailsSource(authenticationDetailsSource)
             .permitAll()
                 .and()
            // .sessionManagement()
@@ -106,13 +109,13 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     // @formatter:on
     }
     
-   /* @Bean
+    @Bean
     public DaoAuthenticationProvider authProvider() {
         final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(encoder());
         return authProvider;
-    }*/
+    }
 
     @Bean
     public PasswordEncoder encoder() {
